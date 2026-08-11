@@ -1,0 +1,9 @@
+torch
+transformers
+peft
+datasets
+fastapi
+uvicorn
+gradio
+pydantic
+numpy
