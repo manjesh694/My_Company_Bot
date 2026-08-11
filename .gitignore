@@ -1,0 +1,14 @@
+# Ignore large trained model weights and checkpoints
+/checkpoints/
+/my_company_model/
+/sft_checkpoints/
+/sft_my_company_model/
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# Ignore python cache files
+__pycache__/
+*.pyc
+.env

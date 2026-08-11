@@ -1,0 +1,48 @@
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+# 1. Model Name
+model_id = "Qwen/Qwen2.5-1.5B-Instruct"
+
+# 2. Load Tokenizer & Model (Set to CPU)
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    torch_dtype="auto",
+    device_map="cpu"
+)
+
+# 3. Chat Messages
+messages = [
+    {"role": "system", "content": "You are MyCompanyBot, a helpful AI assistant."},
+    {"role": "user", "content": "Explain PPO in one sentence."}
+]
+
+# 4. Apply Chat Template
+prompt = tokenizer.apply_chat_template(
+    messages, 
+    tokenize=False, 
+    add_generation_prompt=True
+)
+
+print("--- Formatted Chat Prompt ---")
+print(prompt)
+
+# 5. Encode (Set to CPU)
+inputs = tokenizer(prompt, return_tensors="pt").to("cpu")
+
+# 6. Generate Response
+output_tokens = model.generate(
+    **inputs, 
+    max_new_tokens=50,
+    pad_token_id=tokenizer.eos_token_id
+)
+
+# 7. Decode Response
+response = tokenizer.decode(
+    output_tokens[0][inputs["input_ids"].shape[1]:], 
+    skip_special_tokens=True
+)
+
+print("\n--- MyCompanyBot Answer ---")
+print(response)
