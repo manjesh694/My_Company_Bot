@@ -6,10 +6,10 @@ from transformers import (
     BitsAndBytesConfig,
     TrainingArguments
 )
-from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+from peft import LoraConfig
 from trl import SFTTrainer
 
-# 1. Configuration (Using open-access model)
+# 1. Configuration
 MODEL_ID = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 OUTPUT_DIR = "./sft_my_company_model"
 
@@ -36,7 +36,6 @@ if use_cuda:
         device_map="auto",
         trust_remote_code=True
     )
-    model = prepare_model_for_kbit_training(model)
 else:
     # CPU fallback
     print("GPU not detected. Loading model on CPU...")
@@ -55,8 +54,6 @@ peft_config = LoraConfig(
     bias="none",
     task_type="CAUSAL_LM"
 )
-
-model = get_peft_model(model, peft_config)
 
 # 4. Training Arguments
 training_args = TrainingArguments(
@@ -86,12 +83,12 @@ except Exception as e:
     ]}
     dataset = {"train": Dataset.from_dict(sample_data)}
 
-# 6. Initialize Trainer (Fixed for newer TRL versions)
+# 6. Initialize Trainer
 trainer = SFTTrainer(
     model=model,
     train_dataset=dataset["train"],
     peft_config=peft_config,
-    tokenizer=tokenizer,
+    processing_class=tokenizer,
     args=training_args,
 )
 
