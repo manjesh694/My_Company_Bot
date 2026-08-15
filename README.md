@@ -29,3 +29,22 @@ My_Company_Bot/
 ├── docker-compose.yml      # Docker container orchestration file
 ├── requirements.txt        # Python dependencies list
 └── README.md               # Project documentation
+## 🚀 How to Run in Terminal
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/manjesh694/My_Company_Bot.git
+cd My_Company_Bot
+# Windows (PowerShell / CMD)
+python -m venv venv
+.\venv\Scripts\activate
+
+# macOS / Linux
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python run_my_company_bot.py
+python app.py
+uvicorn fastapi_app:app --reload --port 8000
+python fsdp_qlora_trainer.py
+docker-compose up --build
